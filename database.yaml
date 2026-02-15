@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: db-three-tier-app
+  name: studentapp-db
+  labels:
+    app: studentapp-db
 spec:
-  serviceName: database-service
-  replicas: 1  # safer for single DB
   selector:
     matchLabels:
-      app: database
-  updateStrategy:
-    type: RollingUpdate
+      app: studentapp-db
+  serviceName: database-service
+  replicas: 1  # safer for single DB
   template:
     metadata:
       labels:
-        app: database
+        app: studentapp-db
     spec:
       containers:
-        - name: my-backend
-          image: mariadb
+        - name: studentapp
+          image: mariadb:latest
           env:
             - name: MARIADB_ROOT_PASSWORD
               value: "yashpatel017"
@@ -30,10 +30,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: database-service
+  labels:
+    app: stuidentapp-db
 spec:
-  type: ClusterIP
   selector:
-    app: database
+    app: studentapp-db
   ports:
     - port: 3306
       targetPort: 3306
